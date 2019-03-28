@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using InventoryStamper.Data;
 
 namespace InventoryStamper.App
 {
@@ -16,7 +17,8 @@ namespace InventoryStamper.App
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            Console.WriteLine("I have the power");
+            var client = new SQLiteClient();
+            client.TestAdd();
         }
     }
 }

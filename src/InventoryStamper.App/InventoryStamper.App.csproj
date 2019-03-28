@@ -94,5 +94,15 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\InventoryStamper.Data\InventoryStamper.Data.csproj">
+      <Project>{41399665-048b-4d62-bcd9-b085a5b2b882}</Project>
+      <Name>InventoryStamper.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\InventoryStamper.Models\InventoryStamper.Models.csproj">
+      <Project>{abe188a3-6367-4f64-a654-6d32503a4f81}</Project>
+      <Name>InventoryStamper.Models</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
