@@ -18,6 +18,7 @@ namespace InventoryStamper.App
         {
             base.OnStartup(e);
             var client = new SQLiteClient();
+            client.TestSeed();
             client.TestAdd();
         }
     }

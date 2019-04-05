@@ -9,20 +9,20 @@ using System.Data.SQLite.EF6;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using InventoryStamper.Data.Configuration;
 using InventoryStamper.Models;
 using SQLite.CodeFirst;
 
 namespace InventoryStamper.Data
 {
-    [DbConfigurationType(typeof(MyDbContextConfiguration))]
+    [DbConfigurationType(typeof(SQLiteDbContextConfiguration))]
     public class TestDBContext : DbContext
     {
 
-        public DbSet<InventoryItem> Inventory { get; set; }
-
-
+        public DbSet<InventoryItem> TestSet { get; set; }
+        
         public TestDBContext()
-            : base() { }
+            : base("ConnectionString") { }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -30,31 +30,6 @@ namespace InventoryStamper.Data
             Console.WriteLine(output);
             var connectionInit = new SqliteCreateDatabaseIfNotExists<TestDBContext>(modelBuilder);
             Database.SetInitializer(connectionInit);
-        }
-        
+        }        
     }
-
-    internal class MyDbContextConfiguration : DbConfiguration
-    {
-        public MyDbContextConfiguration()
-        {
-            SetDefaultConnectionFactory(new SQLiteConnectionFactory());
-            SetProviderFactory("System.Data.SQLite", SQLiteFactory.Instance);
-            SetProviderFactory("System.Data.SQLite.EF6", SQLiteProviderFactory.Instance);
-            SetProviderServices("System.Data.SQLite", (DbProviderServices)SQLiteProviderFactory.Instance.GetService(typeof(DbProviderServices)));
-        }
-    }
-
-    public class SQLiteConnectionFactory : IDbConnectionFactory
-    {
-        public DbConnection CreateConnection(string nameOrConnectionString)
-        {
-            SQLiteConnectionStringBuilder builder = new SQLiteConnectionStringBuilder();
-            builder.DataSource = @".\db\test\test.sqlite";
-            builder.ForeignKeys = true;
-            return new SQLiteConnection(builder.ConnectionString);
-        }
-    }
-
-
 }

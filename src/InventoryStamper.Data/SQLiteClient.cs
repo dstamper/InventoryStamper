@@ -1,4 +1,5 @@
-﻿using InventoryStamper.Models;
+﻿using InventoryStamper.Data.Contexts;
+using InventoryStamper.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
@@ -12,22 +13,32 @@ namespace InventoryStamper.Data
     {
         public void TestAdd()
         {
-            using (var context = new TestDBContext())
+            using (var context = new InventoryContext())
             {
-                var freshItem = new InventoryItem
-                {
-                    Id = Guid.NewGuid(),
-                    ItemName = "test"
-                };
-                context.Inventory.Add(freshItem);
+
+                string assetTagString = Guid.NewGuid().ToString();
+                var queryCat = context.Categories.First();
+                context.Inventory.Add(new InventoryItem { AssetTag = assetTagString, Name="Test Item", Category = queryCat, Notes = "Notes go here" });
                 context.SaveChanges();
+                var currentPlace = context.Inventory.ToList();
+                var queryItem = context.Inventory.Where(item => item.AssetTag == assetTagString).FirstOrDefault();
+                context.Transactions.Add(new Checkout { Item = queryItem, Owner = "David", Start = DateTime.UtcNow, Out = true });
+                context.SaveChanges();
+
             }
         }
 
-        private void FixEfProviderServicesProblem()
+        public void TestSeed()
         {
-            //https://stackoverflow.com/questions/25433298/entityframework-sqlserver-dll-not-is-getting-added-to-the-published-folder-only
-            var instance = System.Data.Entity.SqlServer.SqlProviderServices.Instance;
+
+            using (var context = new InventoryContext())
+            {
+                context.Categories.Add(new ItemCategory { Category = "Laptop" });
+                context.Categories.Add(new ItemCategory { Category = "Projector" });
+                context.SaveChanges();
+
+            }
         }
     }
+    
 }
