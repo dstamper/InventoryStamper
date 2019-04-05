@@ -14,8 +14,11 @@ namespace InventoryStamper.Data
         {
             using (var context = new TestDBContext())
             {
-                var freshItem = new InventoryItem();
-                freshItem.ItemName = "Test";
+                var freshItem = new InventoryItem
+                {
+                    Id = Guid.NewGuid(),
+                    ItemName = "test"
+                };
                 context.Inventory.Add(freshItem);
                 context.SaveChanges();
             }
